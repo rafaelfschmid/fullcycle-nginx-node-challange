@@ -9,23 +9,24 @@ const config = {
 }
 const mysql = require('mysql')
 
-app.set('view engine', 'ejs')
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
 
 app.get('/', (req, res) => {
     const connection = mysql.createConnection(config)
-    const sql = `INSERT INTO people(name) VALUES('Pedro')`
+    const sql = `INSERT INTO people(name) VALUES('Joao')`
     connection.query(sql)
     connection.end()
 
     const con = mysql.createConnection(config)
     result = con.connect(function(err) {
         if (err) throw err;
-        con.query("SELECT * FROM people", function (err, result, fields) {
-            if (err) 
-                throw err;
-        
+        con.query("SELECT * FROM people", function (err, result) {
             console.log(result);
-            res.render('pages/index')
+            res.render('pages/index', {
+                'rows': result
+              });
         });
         con.end()
     })
