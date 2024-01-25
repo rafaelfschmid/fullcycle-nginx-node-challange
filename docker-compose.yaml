@@ -24,8 +24,9 @@ services:
     build: 
       context: node
     container_name: app
-    entrypoint: wait-for db:3306 -t 20 --
-    command: node index.js
+    volumes:
+      - ./node:/usr/src/app
+    entrypoint: wait-for db:3306 -t 20 -- /usr/src/app/npm-init.sh
     tty: true
     networks:
       - nginx-node
@@ -37,7 +38,6 @@ services:
     build: 
       context: nginx
     container_name: nginx
-    #entrypoint: dockerize -wait tcp://app:3001 -timeout 20s /docker-entrypoint.sh
     command:  nginx -g 'daemon off;'
     tty: true
     ports:
